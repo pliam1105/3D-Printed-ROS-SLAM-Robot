@@ -28,7 +28,7 @@ void setup() {
 void loop() {
   currentTime = millis();
   if(currentTime - lastTime >= interval){
-    //compute speeds in pulses/second
+    //compute speeds in pulses/millisecond
     float leftSpeed = ((float)leftCounter)/((float)currentTime - lastTime);
     float rightSpeed = ((float)rightCounter)/((float)currentTime - lastTime);
     Serial.print(leftSpeed);
