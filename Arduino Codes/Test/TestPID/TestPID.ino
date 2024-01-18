@@ -20,7 +20,8 @@
 #define rightA 19
 #define rightB 18
 
-const double metersToPulses = 1670;
+const double metersToPulses = 1670.0; //for meter -> pulses conversion
+const double wheelDistance = 0.25; //for angular velocity computation
 
 //encoder variables
 volatile long leftCounter = 0, rightCounter = 0;
@@ -34,6 +35,9 @@ const double KP = 1, KI = 1.5, KD = 0.05;
 double leftMotorSpeed, rightMotorSpeed;
 double leftOutput, rightOutput;
 double leftPWM, rightPWM;
+
+//ROS Twist linear and angular components
+double linearX, angularZ;
 
 PID leftSpeedPID(&leftEncoderSpeed, &leftOutput, &leftMotorSpeed, KP, KI, KD, DIRECT);
 PID rightSpeedPID(&rightEncoderSpeed, &rightOutput, &rightMotorSpeed, KP, KI, KD, DIRECT);
@@ -75,9 +79,13 @@ void setup() {
   leftSpeedPID.SetMode(AUTOMATIC);
   rightSpeedPID.SetMode(AUTOMATIC);
 
-  //motor speeds
-  leftMotorSpeed = 0.2;
-  rightMotorSpeed = 0.2;
+  // //motor speeds
+  // leftMotorSpeed = 0.2;
+  // rightMotorSpeed = 0.2;
+
+  //ROS Twist components
+  linearX = 0.2;//in m/s
+  angularZ = 0.78;//in rad/s
 }
 
 void loop() {
@@ -101,13 +109,16 @@ void loop() {
     lastTime += encoderInterval;
   }
 
-  if(currentTime - startTime >= (1.0/leftMotorSpeed*1000)){
+  if(currentTime - startTime >= 2000){
     leftSpeedPID.SetMode(MANUAL);
     rightSpeedPID.SetMode(MANUAL);
     leftPWM = 0;
     rightPWM = 0;
   }
 
+  //compute wheel velocities from linear and angular velocity components
+  leftMotorSpeed = linearX - angularZ * wheelDistance / 2.0;
+  rightMotorSpeed = linearX + angularZ * wheelDistance / 2.0;
   //apply PID
   leftSpeedPID.Compute();
   rightSpeedPID.Compute();
