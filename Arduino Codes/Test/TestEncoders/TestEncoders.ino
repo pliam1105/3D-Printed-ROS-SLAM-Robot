@@ -9,7 +9,7 @@
 volatile long leftCounter = 0, rightCounter = 0;
 const long interval = 1000;
 unsigned long lastTime, currentTime;
-bool changeLeft = false, changeRight = false;
+volatile bool changeLeft = false, changeRight = false;
 
 void setup() {
   Serial.begin(115200);
@@ -19,13 +19,20 @@ void setup() {
   pinMode(rightA, INPUT_PULLUP);
   pinMode(rightB, INPUT_PULLUP);
 
-  attachInterrupt(0, changeLeftA, CHANGE);
-  attachInterrupt(4, changeRightA, CHANGE);
+  attachInterrupt(0, changeLeftA, RISING);
+  attachInterrupt(4, changeRightA, RISING);
 
   lastTime = millis();
 }
 
 void loop() {
+  // if(changeLeft || changeRight){
+  //   Serial.print(leftCounter);
+  //   Serial.print(", ");
+  //   Serial.println(rightCounter);
+  //   changeLeft = changeRight = false;
+  // }
+  
   currentTime = millis();
   if(currentTime - lastTime >= interval){
     //compute speeds in pulses/millisecond
@@ -41,11 +48,11 @@ void loop() {
 
 void changeLeftA(){
   if(digitalRead(leftA)!=digitalRead(leftB)){
-    //clockwise
-    leftCounter++;
-  }else{
-    //counterclockwise
+    //clockwise but reversed -> forward is +
     leftCounter--;
+  }else{
+    //counterclockwise but reversed
+    leftCounter++;
   }
   changeLeft = true;
 }
