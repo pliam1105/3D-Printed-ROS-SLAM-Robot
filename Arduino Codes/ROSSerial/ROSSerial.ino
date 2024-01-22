@@ -52,6 +52,10 @@ struct __attribute__((packed)) vel_struct{
   int32_t stop;
 };
 
+struct __attribute((packed)) real_speed_struct{
+  float speed_left, speed_right;
+};
+
 void setup() {
   //define motor pin modes
   pinMode(leftRPWM, OUTPUT);
@@ -102,29 +106,12 @@ void setup() {
 }
 
 void loop() {
-  //compute encoder speed
-  currentTime = millis();
-  if(currentTime - lastTime >= encoderInterval){
-    //compute speeds in pulses/millisecond
-    leftEncoderSpeed = ((double)leftCounter)/((double)currentTime - lastTime);
-    rightEncoderSpeed = ((double)rightCounter)/((double)currentTime - lastTime);
-    //convert to meters/second
-    leftEncoderSpeed = leftEncoderSpeed * 1000.0 / metersToPulses;
-    rightEncoderSpeed = rightEncoderSpeed * 1000.0 / metersToPulses;
-    // Serial.print(leftMotorSpeed);
-    // Serial.print(", ");
-    // Serial.print(leftEncoderSpeed);
-    // Serial.print(", ");
-    // Serial.print(rightMotorSpeed);
-    // Serial.print(", ");
-    // Serial.println(rightEncoderSpeed);
-    leftCounter = rightCounter = 0;
-    lastTime += encoderInterval;
-  }
-
+  uint16_t packet_size = 0;
+  
+  //receiving commands
   if(ros_transfer.available()){
     //receive packet
-    uint16_t packet_size = 0;
+    packet_size = 0;
     vel_struct new_vel = vel_struct();
     packet_size = ros_transfer.rxObj(new_vel, packet_size);
 
@@ -135,11 +122,38 @@ void loop() {
 
     //send response
     packet_size = 0;
-    packet_size = ros_transfer.txObj(new_vel.linear_x, packet_size);
-    packet_size = ros_transfer.txObj(new_vel.angular_z, packet_size);
-    packet_size = ros_transfer.txObj(new_vel.stop, packet_size);
-    packet_size = ros_transfer.txObj( (new_vel.stop == 1) ? "ST" : "MV", packet_size);
+    packet_size = ros_transfer.txObj("OK", packet_size);
     ros_transfer.sendData(packet_size);
+  }
+
+  //compute and send encoder speed
+  currentTime = millis();
+  if(currentTime - lastTime >= encoderInterval){
+    //compute speeds in pulses/millisecond
+    leftEncoderSpeed = ((double)leftCounter)/((double)currentTime - lastTime);
+    rightEncoderSpeed = ((double)rightCounter)/((double)currentTime - lastTime);
+    //convert to meters/second
+    leftEncoderSpeed = leftEncoderSpeed * 1000.0 / metersToPulses;
+    rightEncoderSpeed = rightEncoderSpeed * 1000.0 / metersToPulses;
+    leftCounter = rightCounter = 0;
+    lastTime += encoderInterval;
+
+    //sending encoder speeds
+    real_speed_struct real_speed = real_speed_struct();
+    real_speed.speed_left = leftEncoderSpeed;
+    real_speed.speed_right = rightEncoderSpeed;
+
+    packet_size = 0;
+    packet_size = ros_transfer.txObj(real_speed.speed_left, packet_size);
+    packet_size = ros_transfer.txObj(real_speed.speed_right, packet_size);
+    ros_transfer.sendData(packet_size);
+    //wait for response
+    while(!ros_transfer.available()){
+      //wait
+    }
+    packet_size = 0;
+    char ok[2];
+    packet_size = ros_transfer.rxObj(ok, packet_size, 2);
   }
 
   //compute wheel velocities from linear and angular velocity components
