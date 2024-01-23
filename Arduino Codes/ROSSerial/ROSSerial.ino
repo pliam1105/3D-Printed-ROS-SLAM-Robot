@@ -56,6 +56,8 @@ struct __attribute((packed)) real_speed_struct{
   float speed_left, speed_right;
 };
 
+uint16_t packet_size = 0;
+
 void setup() {
   //define motor pin modes
   pinMode(leftRPWM, OUTPUT);
@@ -96,18 +98,24 @@ void setup() {
   leftSpeedPID.SetMode(AUTOMATIC);
   rightSpeedPID.SetMode(AUTOMATIC);
 
-  // //motor speeds
-  // leftMotorSpeed = 0.2;
-  // rightMotorSpeed = 0.2;
-
-  //ROS Twist components
-  // linearX = 0.2;//in m/s
-  // angularZ = 0.78;//in rad/s
+  //wait for handshake call
+  while(true){
+    if(ros_transfer.available()){
+      packet_size = 0;
+      int32_t ok;
+      packet_size = ros_transfer.rxObj(ok, packet_size);//should be 100
+      if(ok == 100){
+        //send response
+        packet_size = 0;
+        packet_size = ros_transfer.txObj((int32_t)200, packet_size);
+        ros_transfer.sendData(packet_size);
+        break;
+      }
+    }
+  }
 }
 
 void loop() {
-  uint16_t packet_size = 0;
-  
   //receiving commands
   if(ros_transfer.available()){
     //receive packet
@@ -120,13 +128,18 @@ void loop() {
     linearX = new_vel.linear_x;
     angularZ = new_vel.angular_z;
 
-    //send response
+    //send encoder speeds
+    real_speed_struct real_speed = real_speed_struct();
+    real_speed.speed_left = leftEncoderSpeed;
+    real_speed.speed_right = rightEncoderSpeed;
+
     packet_size = 0;
-    packet_size = ros_transfer.txObj("OK", packet_size);
+    packet_size = ros_transfer.txObj(real_speed.speed_left, packet_size);
+    packet_size = ros_transfer.txObj(real_speed.speed_right, packet_size);
     ros_transfer.sendData(packet_size);
   }
 
-  //compute and send encoder speed
+  //compute encoder speeds
   currentTime = millis();
   if(currentTime - lastTime >= encoderInterval){
     //compute speeds in pulses/millisecond
@@ -137,25 +150,8 @@ void loop() {
     rightEncoderSpeed = rightEncoderSpeed * 1000.0 / metersToPulses;
     leftCounter = rightCounter = 0;
     lastTime += encoderInterval;
-
-    //sending encoder speeds
-    real_speed_struct real_speed = real_speed_struct();
-    real_speed.speed_left = leftEncoderSpeed;
-    real_speed.speed_right = rightEncoderSpeed;
-
-    packet_size = 0;
-    packet_size = ros_transfer.txObj(real_speed.speed_left, packet_size);
-    packet_size = ros_transfer.txObj(real_speed.speed_right, packet_size);
-    ros_transfer.sendData(packet_size);
-    //wait for response
-    while(!ros_transfer.available()){
-      //wait
-    }
-    packet_size = 0;
-    char ok[2];
-    packet_size = ros_transfer.rxObj(ok, packet_size, 2);
   }
-
+  
   //compute wheel velocities from linear and angular velocity components
   leftMotorSpeed = linearX - angularZ * wheelDistance / 2.0;
   rightMotorSpeed = linearX + angularZ * wheelDistance / 2.0;
@@ -183,25 +179,25 @@ void loop() {
   }
 
   if(stop != 1){
-      // if(leftSpeedPID.GetMode() == MANUAL) leftSpeedPID.SetMode(AUTOMATIC);
-      // if(rightSpeedPID.GetMode() == MANUAL) rightSpeedPID.SetMode(AUTOMATIC);
-      digitalWrite(leftENL, HIGH);
-      digitalWrite(leftENR, HIGH);
-      digitalWrite(rightENL, HIGH);
-      digitalWrite(rightENR, HIGH);
-    }else{
-      // leftSpeedPID.SetMode(MANUAL);
-      // rightSpeedPID.SetMode(MANUAL);
-      analogWrite(leftLPWM, 0);
-      analogWrite(leftRPWM, 0);
-      analogWrite(rightLPWM, 0);
-      analogWrite(rightRPWM, 0);
-      digitalWrite(leftENL, LOW);
-      digitalWrite(leftENR, LOW);
-      digitalWrite(rightENL, LOW);
-      digitalWrite(rightENR, LOW);
-      leftPWM = rightPWM = 0;
-    }
+    // if(leftSpeedPID.GetMode() == MANUAL) leftSpeedPID.SetMode(AUTOMATIC);
+    // if(rightSpeedPID.GetMode() == MANUAL) rightSpeedPID.SetMode(AUTOMATIC);
+    digitalWrite(leftENL, HIGH);
+    digitalWrite(leftENR, HIGH);
+    digitalWrite(rightENL, HIGH);
+    digitalWrite(rightENR, HIGH);
+  }else{
+    // leftSpeedPID.SetMode(MANUAL);
+    // rightSpeedPID.SetMode(MANUAL);
+    analogWrite(leftLPWM, 0);
+    analogWrite(leftRPWM, 0);
+    analogWrite(rightLPWM, 0);
+    analogWrite(rightRPWM, 0);
+    digitalWrite(leftENL, LOW);
+    digitalWrite(leftENR, LOW);
+    digitalWrite(rightENL, LOW);
+    digitalWrite(rightENR, LOW);
+    leftPWM = rightPWM = 0;
+  }
 }
 
 void changeLeftA(){
