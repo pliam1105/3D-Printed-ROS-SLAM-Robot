@@ -43,6 +43,7 @@ PID leftSpeedPID(&leftEncoderSpeed, &leftOutput, &leftMotorSpeed, KP, KI, KD, DI
 PID rightSpeedPID(&rightEncoderSpeed, &rightOutput, &rightMotorSpeed, KP, KI, KD, DIRECT);
 
 void setup() {
+  delay(2000);
   //define motor pin modes
   pinMode(leftRPWM, OUTPUT);
   pinMode(leftLPWM, OUTPUT);
@@ -85,7 +86,9 @@ void setup() {
 
   //ROS Twist components
   linearX = 0.2;//in m/s
-  angularZ = 0.78;//in rad/s
+  angularZ = 0;//in rad/s
+
+  // delay(1000);
 }
 
 void loop() {
@@ -98,6 +101,7 @@ void loop() {
     //convert to meters/second
     leftEncoderSpeed = leftEncoderSpeed * 1000.0 / metersToPulses;
     rightEncoderSpeed = rightEncoderSpeed * 1000.0 / metersToPulses;
+    Serial.print("0, ");
     Serial.print(leftMotorSpeed);
     Serial.print(", ");
     Serial.print(leftEncoderSpeed);
@@ -109,11 +113,8 @@ void loop() {
     lastTime += encoderInterval;
   }
 
-  if(currentTime - startTime >= 2000){
-    leftSpeedPID.SetMode(MANUAL);
-    rightSpeedPID.SetMode(MANUAL);
-    leftPWM = 0;
-    rightPWM = 0;
+  if(currentTime - startTime >= 5000){
+    stop_moving();
   }
 
   //compute wheel velocities from linear and angular velocity components
@@ -141,6 +142,18 @@ void loop() {
     analogWrite(rightRPWM, 0);
     analogWrite(rightLPWM, -rightPWM);
   }
+}
+
+void stop_moving(){
+  analogWrite(leftLPWM, 0);
+  analogWrite(leftRPWM, 0);
+  analogWrite(rightLPWM, 0);
+  analogWrite(rightRPWM, 0);
+  digitalWrite(leftENL, LOW);
+  digitalWrite(leftENR, LOW);
+  digitalWrite(rightENL, LOW);
+  digitalWrite(rightENR, LOW);
+  leftPWM = rightPWM = 0;
 }
 
 void changeLeftA(){

@@ -71,17 +71,17 @@ class ArduinoSerial(Node):
         # update odometry data
         self.odom_linear_x = (self.real_speed.speed_left + self.real_speed.speed_right) / 2
         self.odom_angular_z = (self.real_speed.speed_right - self.real_speed.speed_left) / self.wheel_separation
+        # print("left: {0}, right: {1}, linear: {2}, angular: {3}".format(self.real_speed.speed_left, self.real_speed.speed_right, self.odom_linear_x, self.odom_angular_z))
         curr_time = self.get_clock().now()
         # compute changes
         dt = (curr_time - self.last_odom_time).nanoseconds / 1e9
-        if(self.odom_angular_z != 0.0):
-            dx = - (self.odom_linear_x/self.odom_angular_z)*math.sin(self.odom_yaw) + (self.odom_linear_x/self.odom_angular_z)*math.sin(self.odom_yaw+self.odom_angular_z*dt)
-            dy = (self.odom_linear_x/self.odom_angular_z)*math.cos(self.odom_yaw) - (self.odom_linear_x/self.odom_angular_z)*math.cos(self.odom_yaw+self.odom_angular_z*dt)
-            dth = self.odom_angular_z*dt
-        else:
-            dx = - self.odom_linear_x*math.sin(self.odom_yaw)
-            dy = self.odom_linear_x*math.cos(self.odom_yaw)
-            dth = 0.0
+        # print("dt: {0}".format(dt))
+        dth = self.odom_angular_z * dt
+        move_left = self.real_speed.speed_left * dt
+        move_right = self.real_speed.speed_right * dt
+        move_center = (move_left + move_right) / 2
+        dx = move_center * math.cos(self.odom_yaw+dth/2)
+        dy = move_center * math.sin(self.odom_yaw+dth/2)
         # apply changes
         self.odom_pos_x += dx
         self.odom_pos_y += dy
