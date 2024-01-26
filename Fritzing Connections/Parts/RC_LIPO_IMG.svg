@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   gorn="0"
+   x="0px"
+   height="1.25986in"
+   enable-background="new 0 0 374.17 90.71"
+   id="Layer_1"
+   version="1.1"
+   viewBox="0 0 374.17 90.71"
+   y="0px"
+   xml:space="preserve"
+   width="5.19681in"
+   sodipodi:docname="LIPO_ICON.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs72" /><sodipodi:namedview
+   id="namedview72"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   inkscape:document-units="in"
+   inkscape:zoom="2.493517"
+   inkscape:cx="249.44687"
+   inkscape:cy="60.356517"
+   inkscape:window-width="1920"
+   inkscape:window-height="991"
+   inkscape:window-x="-9"
+   inkscape:window-y="-9"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="g72" />
+    <desc
+   id="desc1">
+        <referenceFile>BATERIA_LIPO_2200_7_4V.svg</referenceFile>
+    </desc>
+    <switch
+   id="switch72">
+        <foreignObject
+   x="0"
+   height="1"
+   y="0"
+   requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/"
+   width="1">
+            
+        </foreignObject>
+        <g
+   extraneous="self"
+   id="g72">
+            <path
+   fill="#FFCB05"
+   d="M6.171,12.675c0,3.131-0.222,5.669-0.495,5.669H3.654c-0.273,0-0.495-2.538-0.495-5.669l0,0c0-3.131,0.222-5.669,0.495-5.669h2.022C5.949,7.005,6.171,9.543,6.171,12.675L6.171,12.675z"
+   id="path1" />
+            <path
+   fill="#FFCB05"
+   d="M6.171,33.777c0,3.131-0.19,5.669-0.425,5.669H3.583c-0.235,0-0.425-2.539-0.425-5.669l0,0c0-3.131,0.19-5.669,0.425-5.669h2.163C5.981,28.108,6.171,30.646,6.171,33.777L6.171,33.777z"
+   id="path2" />
+            <rect
+   gorn="0.1.1.2"
+   x="70.785"
+   height="90.708"
+   fill="#485654"
+   id="XMLID_1_"
+   stroke-miterlimit="10"
+   stroke-width="1"
+   y="0.534"
+   stroke="#000000"
+   width="303.307" />
+            
+            
+            
+            
+            <linearGradient
+   id="SVGID_1_"
+   y2="72.9385"
+   x2="152.2075"
+   y1="72.9385"
+   gradientUnits="userSpaceOnUse"
+   x1="132.3652">
+                <stop
+   style="stop-color:#D1E4A5"
+   offset="0"
+   id="stop4" />
+                <stop
+   style="stop-color:#ACD479"
+   offset="0.5"
+   id="stop5" />
+                <stop
+   style="stop-color:#76B83F"
+   offset="1"
+   id="stop6" />
+            </linearGradient>
+            
+            <linearGradient
+   id="SVGID_2_"
+   y2="72.9385"
+   x2="172.0498"
+   y1="72.9385"
+   gradientUnits="userSpaceOnUse"
+   x1="152.2075">
+                <stop
+   style="stop-color:#D1E4A5"
+   offset="0"
+   id="stop7" />
+                <stop
+   style="stop-color:#ACD479"
+   offset="0.5"
+   id="stop8" />
+                <stop
+   style="stop-color:#76B83F"
+   offset="1"
+   id="stop9" />
+            </linearGradient>
+            
+            <linearGradient
+   id="SVGID_3_"
+   y2="72.9385"
+   x2="191.8926"
+   y1="72.9385"
+   gradientUnits="userSpaceOnUse"
+   x1="172.0498">
+                <stop
+   style="stop-color:#D1E4A5"
+   offset="0"
+   id="stop10" />
+                <stop
+   style="stop-color:#ACD479"
+   offset="0.5"
+   id="stop11" />
+                <stop
+   style="stop-color:#76B83F"
+   offset="1"
+   id="stop12" />
+            </linearGradient>
+            
+            <linearGradient
+   id="SVGID_4_"
+   y2="72.9434"
+   x2="211.7344"
+   y1="72.9434"
+   gradientUnits="userSpaceOnUse"
+   x1="191.8926">
+                <stop
+   style="stop-color:#D1E4A5"
+   offset="0"
+   id="stop13" />
+                <stop
+   style="stop-color:#ACD479"
+   offset="0.5"
+   id="stop14" />
+                <stop
+   style="stop-color:#76B83F"
+   offset="1"
+   id="stop15" />
+            </linearGradient>
+            
+            <linearGradient
+   id="SVGID_5_"
+   y2="72.9434"
+   x2="231.5762"
+   y1="72.9434"
+   gradientUnits="userSpaceOnUse"
+   x1="211.7344">
+                <stop
+   style="stop-color:#D1E4A5"
+   offset="0"
+   id="stop16" />
+                <stop
+   style="stop-color:#ACD479"
+   offset="0.5"
+   id="stop17" />
+                <stop
+   style="stop-color:#76B83F"
+   offset="1"
+   id="stop18" />
+            </linearGradient>
+            
+            <linearGradient
+   id="SVGID_6_"
+   y2="72.9434"
+   x2="251.4199"
+   y1="72.9434"
+   gradientUnits="userSpaceOnUse"
+   x1="231.5762">
+                <stop
+   style="stop-color:#D1E4A5"
+   offset="0"
+   id="stop19" />
+                <stop
+   style="stop-color:#ACD479"
+   offset="0.5"
+   id="stop20" />
+                <stop
+   style="stop-color:#76B83F"
+   offset="1"
+   id="stop21" />
+            </linearGradient>
+            
+            <g
+   transform="matrix(1 0 0 1 274.3633 46.1094)"
+   id="g25">
+                <g
+   id="g24">
+                    <g
+   id="g23">
+                        <g
+   id="g22">
+                            
+                            
+                        </g>
+                    </g>
+                </g>
+            </g>
+            <g
+   transform="matrix(1 0 0 1 274.3633 55.4688)"
+   id="g28">
+                <g
+   id="g27">
+                    <g
+   id="g26">
+                        
+                    </g>
+                </g>
+            </g>
+            <g
+   transform="matrix(1 0 0 1 132.3652 25.5068)"
+   id="g31">
+                <g
+   id="g30">
+                    <g
+   id="g29">
+                        
+                    </g>
+                </g>
+            </g>
+            <g
+   transform="matrix(1 0 0 1 184.1118 35.5752)"
+   id="g34">
+                <g
+   id="g33">
+                    <g
+   id="g32">
+                        
+                    </g>
+                </g>
+            </g>
+            <g
+   transform="matrix(1 0 0 1 132.3652 63.9492)"
+   id="g37">
+                <g
+   id="g36">
+                    <g
+   id="g35">
+                        
+                    </g>
+                </g>
+            </g>
+            <rect
+   x="48.108"
+   height="4.253"
+   y="62.896"
+   width="22.677"
+   id="rect37" />
+            <rect
+   x="48.108"
+   height="4.253"
+   fill="#ED1C24"
+   y="83.079"
+   width="22.677"
+   id="rect38" />
+            <rect
+   x="48.108"
+   height="4.253"
+   y="77.069"
+   width="22.677"
+   id="rect39" />
+            <rect
+   x="48.108"
+   height="4.253"
+   y="69.983"
+   width="22.677"
+   id="rect40" />
+            <rect
+   x="26.848"
+   height="31.181"
+   fill="#DBD5EA"
+   y="58.529"
+   width="21.26"
+   id="rect41" />
+            <rect
+   x="32.848"
+   height="1.456"
+   fill="#FFFFFF"
+   y="65.305"
+   width="12.524"
+   id="rect42" />
+            <rect
+   x="32.848"
+   height="1.456"
+   fill="#FFFFFF"
+   y="81.235"
+   width="12.524"
+   id="rect43" />
+            <g
+   transform="matrix(1.2415 0 0 1 132.2817 77.9053)"
+   id="g46">
+                
+            </g>
+            
+            
+            
+            
+            <g
+   transform="matrix(1.214 0 0 1 152.4258 77.9053)"
+   id="g61">
+                <g
+   id="g60">
+                    
+                </g>
+            </g>
+            <rect
+   x="45.499"
+   height="29.764"
+   fill="#FFFFFF"
+   y="59.237"
+   width="1.748"
+   id="rect61" />
+            <rect
+   x="5.171"
+   height="39.685"
+   fill="#B76E11"
+   stroke-miterlimit="10"
+   stroke-width="1"
+   y="3.666"
+   stroke="#000000"
+   width="22.677"
+   id="rect62" />
+            <rect
+   x="27.557"
+   height="43.938"
+   fill="#B76E11"
+   stroke-miterlimit="10"
+   stroke-width="1"
+   y="1.539"
+   stroke="#000000"
+   width="19.842"
+   id="rect63" />
+            <rect
+   x="48.108"
+   height="11.339"
+   fill="#ED1C24"
+   stroke-miterlimit="10"
+   stroke-width="1"
+   y="7.505"
+   stroke="#000000"
+   width="22.677"
+   id="rect64" />
+            <rect
+   x="48.108"
+   height="11.338"
+   stroke-miterlimit="10"
+   stroke-width="1"
+   y="28.43"
+   stroke="#000000"
+   width="22.677"
+   id="rect65" />
+            <g
+   transform="matrix(0 -1 1 0 294.375 78.6533)"
+   id="g67">
+                <g
+   id="g66">
+                    <g
+   id="g65">
+                        
+                    </g>
+                </g>
+            </g>
+            <g
+   transform="matrix(1 0 0 1 297.4922 68.2988)"
+   id="g71">
+                <g
+   id="g70">
+                    <g
+   id="g69">
+                        <g
+   id="g68">
+                            
+                            
+                        </g>
+                    </g>
+                </g>
+            </g>
+            
+            
+        <g
+   transform="translate(109.24197,38.07424)"
+   id="g31-2">
+                <g
+   id="g30-0">
+                    <g
+   id="g29-7">
+                        <text
+   fill="#ffe313"
+   font-size="18px"
+   font-family="'Droid Sans'"
+   id="text28">RC Lipo Battery</text>
+                    </g>
+                </g>
+            </g></g>
+    </switch>
+    
+</svg>
