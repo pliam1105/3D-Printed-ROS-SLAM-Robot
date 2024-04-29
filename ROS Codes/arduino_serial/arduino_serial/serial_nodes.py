@@ -46,6 +46,7 @@ class ArduinoSerial(Node):
         # other setup
         self.send_data = vel_struct()
         self.real_speed = real_speed_struct()
+        self.servo_angles = [0, 10, 50, 25]
         # initiate connection
         self.link = txfer.SerialTransfer('ttyACM0')
         self.link.open()
@@ -111,6 +112,7 @@ class ArduinoSerial(Node):
         send_packet_size = self.link.tx_obj(self.send_data.linear_x, start_pos=send_packet_size)
         send_packet_size = self.link.tx_obj(self.send_data.angular_z, start_pos=send_packet_size)
         send_packet_size = self.link.tx_obj(self.send_data.stop, start_pos=send_packet_size)
+        send_packet_size = self.link.tx_obj(self.servo_angles, start_pos=send_packet_size)
         # send packet
         self.link.send(send_packet_size)
         # print("New command sent: {0} , {1} , {2}".format(self.send_data.linear_x, self.send_data.angular_z, self.send_data.stop))

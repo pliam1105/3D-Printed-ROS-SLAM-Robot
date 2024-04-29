@@ -1,5 +1,12 @@
+#include <Servo.h>
 #include <PID_v1.h>
 #include "SerialTransfer.h"
+
+//servos
+#define servo1 22
+#define servo2 23
+#define servo3 24
+#define servo4 25
 
 //left motor
 #define leftRPWM 4
@@ -20,6 +27,22 @@
 //right encoder
 #define rightA 19
 #define rightB 18
+
+//servo variables
+Servo Servo1, Servo2, Servo3, Servo4;
+
+const float valueRange1[] = {30, 80};
+const float angleRange1[] = {-20, 30};
+
+const float valueRange2[] = {40, 110};
+const float angleRange2[] = {10, 80};
+
+const float valueRange3[] = {90, 160};
+const float angleRange3[] = {-50, 20};
+const float angleConstrain3[] = {50, 120}; //wrt the previous link, this is where angle3 lies
+
+const float valueRange4[] = {50, 0};
+const float angleRange4[] = {25, 75};
 
 const double metersToPulses = 1670.0; //for meter -> pulses conversion
 const double wheelDistance = 0.25; //for angular velocity computation
@@ -59,6 +82,16 @@ struct __attribute((packed)) real_speed_struct{
 uint16_t packet_size = 0;
 
 void setup() {
+  //initialize servos
+  float initialAngles[4] = {0, 10, 50, 25};
+  moveServos(initialAngles);
+
+  //attach servos
+  Servo1.attach(servo1);
+  Servo2.attach(servo2);
+  Servo3.attach(servo3);
+  Servo4.attach(servo4);
+
   //define motor pin modes
   pinMode(leftRPWM, OUTPUT);
   pinMode(leftLPWM, OUTPUT);
@@ -122,11 +155,14 @@ void loop() {
     packet_size = 0;
     vel_struct new_vel = vel_struct();
     packet_size = ros_transfer.rxObj(new_vel, packet_size);
+    float servoAngles[4];
+    packet_size = ros_transfer.rxObj(servoAngles, packet_size);
 
     //take action
     stop = new_vel.stop;
     linearX = new_vel.linear_x;
     angularZ = new_vel.angular_z;
+    moveServos(servoAngles);
 
     //send encoder speeds
     real_speed_struct real_speed = real_speed_struct();
@@ -220,4 +256,19 @@ void changeRightA(){
     rightCounter--;
   }
   changeRight = true;
+}
+
+void moveServos(float angles[4]){
+  //calculate values from angles with map
+  float values[4];
+  values[0] = map(constrain(angles[0], angleRange1[0], angleRange1[1]), angleRange1[0], angleRange1[1], valueRange1[0], valueRange1[1]);
+  values[1] = map(constrain(angles[1], angleRange2[0], angleRange2[1]), angleRange2[0], angleRange2[1], valueRange2[0], valueRange2[1]);
+  values[2] = constrain(map(constrain(angles[2], angleConstrain3[0], angleConstrain3[1])-90-angles[1], angleRange3[0], angleRange3[1], valueRange3[0], valueRange3[1]), 0, 180);
+  values[3] = map(constrain(angles[3], angleRange4[0], angleRange4[1]), angleRange4[0], angleRange4[1], valueRange4[0], valueRange4[1]);
+  
+  //initialize servo values
+  Servo1.write(values[0]);
+  Servo2.write(values[1]);
+  Servo3.write(values[2]);
+  Servo4.write(values[3]);
 }
