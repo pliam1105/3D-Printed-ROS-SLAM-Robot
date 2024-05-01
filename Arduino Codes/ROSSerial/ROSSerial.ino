@@ -81,7 +81,7 @@ uint16_t packet_size = 0;
 void setup() {
   //initialize servos
   float initialAngles[4] = {0, 10, 50, 25};
-  moveServos(initialAngles);
+  moveServos(initialAngles[0], initialAngles[1], initialAngles[2], initialAngles[3]);
 
   //attach servos
   Servo1.attach(servo1);
@@ -158,12 +158,11 @@ void loop() {
     // angularZ = new_cmd.angular_z;
     leftMotorSpeed = new_cmd.vel_left;
     rightMotorSpeed = new_cmd.vel_right;
-    float servoAngles[4] = {new_cmd.angle1, new_cmd.angle2, new_cmd.angle3, new_cmd.angle4};
-    //TODO: pass references (not values) to the function, after copying to the real_data object, to represent the servo angles after constraining them (as feedback to the ROS2 Control hardware component)
-    moveServos(servoAngles);
+
+    data_struct real_data = new_cmd;//to copy & constrain servo values
+    moveServos(real_data.angle1, real_data.angle2, real_data.angle3, real_data.angle4);
 
     //send encoder speeds
-    data_struct real_data = new_cmd;//to copy servo values
     real_data.vel_left = leftEncoderSpeed;
     real_data.vel_right = rightEncoderSpeed;
 
@@ -255,15 +254,21 @@ void changeRightA(){
   changeRight = true;
 }
 
-void moveServos(float angles[4]){
+void moveServos(float &angle1, float &angle2, float &angle3, float &angle4){
+  //constraint angles
+  angle1 = constrain(angle1, angleRange1[0], angleRange1[1]);
+  angle2 = constrain(angle2, angleRange2[0], angleRange2[1]);
+  angle3 = constrain(angle3, angleConstrain3[0], angleConstrain3[1]);
+  angle4 = constrain(angle4, angleRange4[0], angleRange4[1]);
+
   //calculate values from angles with map
   float values[4];
-  values[0] = map(constrain(angles[0], angleRange1[0], angleRange1[1]), angleRange1[0], angleRange1[1], valueRange1[0], valueRange1[1]);
-  values[1] = map(constrain(angles[1], angleRange2[0], angleRange2[1]), angleRange2[0], angleRange2[1], valueRange2[0], valueRange2[1]);
-  values[2] = constrain(map(constrain(angles[2], angleConstrain3[0], angleConstrain3[1])-90-angles[1], angleRange3[0], angleRange3[1], valueRange3[0], valueRange3[1]), 0, 180);
-  values[3] = map(constrain(angles[3], angleRange4[0], angleRange4[1]), angleRange4[0], angleRange4[1], valueRange4[0], valueRange4[1]);
+  values[0] = map(angle1, angleRange1[0], angleRange1[1], valueRange1[0], valueRange1[1]);
+  values[1] = map(angle2, angleRange2[0], angleRange2[1], valueRange2[0], valueRange2[1]);
+  values[2] = constrain(map(angle3-90-angle2, angleRange3[0], angleRange3[1], valueRange3[0], valueRange3[1]), 0, 180);
+  values[3] = map(angle4, angleRange4[0], angleRange4[1], valueRange4[0], valueRange4[1]);
   
-  //initialize servo values
+  //apply servo values
   Servo1.write(values[0]);
   Servo2.write(values[1]);
   Servo3.write(values[2]);
