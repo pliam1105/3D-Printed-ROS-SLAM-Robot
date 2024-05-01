@@ -45,7 +45,7 @@ const float valueRange4[] = {50, 0};
 const float angleRange4[] = {25, 75};
 
 const double metersToPulses = 1670.0; //for meter -> pulses conversion
-const double wheelDistance = 0.25; //for angular velocity computation
+// const double wheelDistance = 0.25; //for angular velocity computation
 
 //encoder variables
 volatile long leftCounter = 0, rightCounter = 0;
@@ -61,7 +61,7 @@ double leftOutput, rightOutput;
 double leftPWM, rightPWM;
 
 //ROS Twist linear and angular components
-double linearX, angularZ;
+// double linearX, angularZ;
 int stop = 1;
 
 PID leftSpeedPID(&leftEncoderSpeed, &leftOutput, &leftMotorSpeed, KP, KI, KD, DIRECT);
@@ -70,13 +70,10 @@ PID rightSpeedPID(&rightEncoderSpeed, &rightOutput, &rightMotorSpeed, KP, KI, KD
 //Serial communication
 SerialTransfer ros_transfer;
 
-struct __attribute__((packed)) vel_struct{
-  float linear_x, angular_z;
+struct __attribute__((packed)) data_struct{
+  float vel_left, vel_right;
   int32_t stop;
-};
-
-struct __attribute((packed)) real_speed_struct{
-  float speed_left, speed_right;
+  float angle1, angle2, angle3, angle4;
 };
 
 uint16_t packet_size = 0;
@@ -151,27 +148,27 @@ void setup() {
 void loop() {
   //receiving commands
   if(ros_transfer.available()){
-    //receive packet
     packet_size = 0;
-    vel_struct new_vel = vel_struct();
-    packet_size = ros_transfer.rxObj(new_vel, packet_size);
-    float servoAngles[4];
-    packet_size = ros_transfer.rxObj(servoAngles, packet_size);
+    data_struct new_cmd = data_struct();
+    packet_size = ros_transfer.rxObj(new_cmd, packet_size);
 
     //take action
-    stop = new_vel.stop;
-    linearX = new_vel.linear_x;
-    angularZ = new_vel.angular_z;
+    stop = new_cmd.stop;
+    // linearX = new_cmd.linear_x;
+    // angularZ = new_cmd.angular_z;
+    leftMotorSpeed = new_cmd.vel_left;
+    rightMotorSpeed = new_cmd.vel_right;
+    float servoAngles[4] = {new_cmd.angle1, new_cmd.angle2, new_cmd.angle3, new_cmd.angle4};
+    //TODO: pass references (not values) to the function, after copying to the real_data object, to represent the servo angles after constraining them (as feedback to the ROS2 Control hardware component)
     moveServos(servoAngles);
 
     //send encoder speeds
-    real_speed_struct real_speed = real_speed_struct();
-    real_speed.speed_left = leftEncoderSpeed;
-    real_speed.speed_right = rightEncoderSpeed;
+    data_struct real_data = new_cmd;//to copy servo values
+    real_data.vel_left = leftEncoderSpeed;
+    real_data.vel_right = rightEncoderSpeed;
 
     packet_size = 0;
-    packet_size = ros_transfer.txObj(real_speed.speed_left, packet_size);
-    packet_size = ros_transfer.txObj(real_speed.speed_right, packet_size);
+    packet_size = ros_transfer.txObj(real_data, packet_size);
     ros_transfer.sendData(packet_size);
   }
 
@@ -189,8 +186,8 @@ void loop() {
   }
   
   //compute wheel velocities from linear and angular velocity components
-  leftMotorSpeed = linearX - angularZ * wheelDistance / 2.0;
-  rightMotorSpeed = linearX + angularZ * wheelDistance / 2.0;
+  // leftMotorSpeed = linearX - angularZ * wheelDistance / 2.0;
+  // rightMotorSpeed = linearX + angularZ * wheelDistance / 2.0;
   //apply PID
   leftSpeedPID.Compute();
   rightSpeedPID.Compute();

@@ -1,0 +1,10 @@
+<library path="slam_bot_hardware">
+    <class 
+        name="slam_bot_hardware/ArduinoHardware"
+        type="slam_bot_hardware::ArduinoHardware"
+        base_class="hardware_interface::SystemInterface">
+        <description>
+            Hardware interfaces for controlling the motors and servos connected to the Arduino.
+        </description>
+    </class>
+</library>
