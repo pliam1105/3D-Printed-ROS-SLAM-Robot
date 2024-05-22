@@ -21,35 +21,43 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 find_package(ament_cmake_python REQUIRED)
-find_package(PythonLibs 3.8 EXACT)
+find_package(Python3 COMPONENTS Interpreter Development)
+
+message("Python3_FOUND:${Python3_FOUND}")
+message("Python3_VERSION:${Python3_VERSION}")
+message("Python3_Interpreter_FOUND:${Python3_Interpreter_FOUND}")
+message("Python3_Development_FOUND:${Python3_Development_FOUND}")
+message("Python3_LIBRARIES:${Python3_LIBRARIES}")
 
 ament_python_install_package(${PROJECT_NAME})
 
-add_library(arduino_hardware src/arduino_hardware.cpp)
-target_include_directories(arduino_hardware PUBLIC
+add_library(slam_bot_hardware SHARED src/arduino_hardware.cpp src/arduino_comms.cpp)
+target_include_directories(slam_bot_hardware PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
-  arduino_hardware
+  slam_bot_hardware
   hardware_interface
   pluginlib
   rclcpp
-  PythonLibs
+  rclcpp_lifecycle
+  Python3
 )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
-target_compile_definitions(arduino_hardware PRIVATE "SLAM_BOT_HARDWARE_BUILDING_LIBRARY")
+target_compile_definitions(slam_bot_hardware PRIVATE "SLAM_BOT_HARDWARE_BUILDING_LIBRARY")
 
-pluginlib_export_plugin_description_file(arduino_hardware hardware_plugins.xml)
+pluginlib_export_plugin_description_file(hardware_interface hardware_plugins.xml)
 
 install(
   DIRECTORY include/
   DESTINATION include
 )
 install(
-  TARGETS arduino_hardware
+  TARGETS slam_bot_hardware
   EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
@@ -67,14 +75,18 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_export_include_directories(
-  include
-)
 ament_export_libraries(
-  arduino_hardware
+  slam_bot_hardware
 )
 ament_export_targets(
-  export_${PROJECT_NAME}
+  export_${PROJECT_NAME} HAS_LIBRARY_TARGET
+)
+ament_export_dependencies(
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
+  Python3
 )
 
 ament_package()
